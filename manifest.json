@@ -1,0 +1,27 @@
+{
+  "manifest_version": "0.3",
+  "name": "espn-sports-pp-mcp",
+  "display_name": "Espn Sports Sample",
+  "version": "4.2.1",
+  "description": "Espn Sports Sample API surface as MCP tools.",
+  "author": {
+    "name": "CLI Printing Press"
+  },
+  "license": "Apache-2.0",
+  "server": {
+    "type": "binary",
+    "entry_point": "bin/espn-sports-pp-mcp",
+    "mcp_config": {
+      "command": "${__dirname}/bin/espn-sports-pp-mcp",
+      "args": []
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": [
+      "darwin",
+      "linux",
+      "win32"
+    ]
+  }
+}

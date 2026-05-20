@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-05-20T01:46:05.1118121Z",
+  "printing_press_version": "4.2.1",
+  "api_name": "espn-sports",
+  "display_name": "Espn Sports Sample",
+  "cli_name": "espn-sports-pp-cli",
+  "owner": "landon-lockhart",
+  "printer_name": "Landon Lockhart",
+  "spec_path": "C:\\Users\\lock_\\espn-scoreboard-sample\\espn-sports.yaml",
+  "spec_format": "openapi3",
+  "spec_checksum": "sha256:93d6535a2fa099b598fbe4bcba2285d181af0ebca947984f945689f1c89dc927",
+  "mcp_binary": "espn-sports-pp-mcp",
+  "mcp_tool_count": 8,
+  "mcp_public_tool_count": 8,
+  "mcp_ready": "full",
+  "api_version": "1.0.0",
+  "auth_type": "none"
+}

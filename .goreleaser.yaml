@@ -1,0 +1,51 @@
+version: 2
+project_name: espn-sports-pp-cli
+changelog:
+  disable: true
+builds:
+  - id: espn-sports-pp-cli
+    main: ./cmd/espn-sports-pp-cli
+    binary: espn-sports-pp-cli
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X espn-sports-pp-cli/internal/cli.version={{ .Version }}
+    targets:
+      - darwin_amd64
+      - darwin_arm64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+      - windows_arm64
+  - id: espn-sports-pp-mcp
+    main: ./cmd/espn-sports-pp-mcp
+    binary: espn-sports-pp-mcp
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+    targets:
+      - darwin_amd64
+      - darwin_arm64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+      - windows_arm64
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+checksum:
+  name_template: checksums.txt
+brews:
+  - name: espn-sports-pp-cli
+    repository:
+      owner: landon-lockhart
+      name: homebrew-tap
+    homepage: "https://github.com/landon-lockhart/espn-sports-pp-cli"
+    description: "Multi-sport CLI spec for live scores and game summaries from ESPN."
+    install: |
+      bin.install "espn-sports-pp-cli"
+      bin.install "espn-sports-pp-mcp"

@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: ESPN Sports Sample
+  version: 1.0.0
+  description: Multi-sport CLI spec for live scores and game summaries from ESPN.
+servers:
+  - url: https://site.api.espn.com
+paths:
+  /apis/site/v2/sports/basketball/nba/scoreboard:
+    get:
+      operationId: getNbaScoreboard
+      summary: Get NBA scoreboard
+      description: Return the current NBA scoreboard payload from ESPN.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/football/nfl/scoreboard:
+    get:
+      operationId: getNflScoreboard
+      summary: Get NFL scoreboard
+      description: Return the current NFL scoreboard payload from ESPN.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/football/college-football/scoreboard:
+    get:
+      operationId: getNcaafScoreboard
+      summary: Get NCAA football scoreboard
+      description: Return the current NCAA football scoreboard payload from ESPN.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/basketball/mens-college-basketball/scoreboard:
+    get:
+      operationId: getNcaabScoreboard
+      summary: Get NCAA basketball scoreboard
+      description: Return the current NCAA men's basketball scoreboard payload from ESPN.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/basketball/nba/summary:
+    get:
+      operationId: getNbaSummary
+      summary: Get NBA game summary
+      description: Return an NBA game's summary and box score from ESPN.
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ESPN event id from the NBA scoreboard payload.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/football/nfl/summary:
+    get:
+      operationId: getNflSummary
+      summary: Get NFL game summary
+      description: Return an NFL game's summary and box score from ESPN.
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ESPN event id from the NFL scoreboard payload.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/football/college-football/summary:
+    get:
+      operationId: getNcaafSummary
+      summary: Get NCAA football game summary
+      description: Return an NCAA football game's summary and box score from ESPN.
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ESPN event id from the NCAA football scoreboard payload.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/basketball/mens-college-basketball/summary:
+    get:
+      operationId: getNcaabSummary
+      summary: Get NCAA basketball game summary
+      description: Return an NCAA men's basketball game's summary and box score from ESPN.
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ESPN event id from the NCAA basketball scoreboard payload.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
