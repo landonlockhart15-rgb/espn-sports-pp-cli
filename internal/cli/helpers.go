@@ -1163,6 +1163,225 @@ func wrapWithProvenance(data json.RawMessage, prov DataProvenance) (json.RawMess
 	return json.Marshal(envelope)
 }
 
+func wrapWithProvenanceAndExtras(data json.RawMessage, prov DataProvenance, extras map[string]any) (json.RawMessage, error) {
+	meta := map[string]any{"source": prov.Source}
+	if prov.SyncedAt != nil {
+		meta["synced_at"] = prov.SyncedAt.UTC().Format(time.RFC3339)
+	}
+	if prov.Reason != "" {
+		meta["reason"] = prov.Reason
+	}
+	if prov.ResourceType != "" {
+		meta["resource_type"] = prov.ResourceType
+	}
+	if prov.Freshness != nil {
+		meta["freshness"] = prov.Freshness
+	}
+	var results any = json.RawMessage(data)
+	if !json.Valid(data) {
+		results = string(data)
+	}
+	envelope := map[string]any{
+		"results": results,
+		"meta":    meta,
+	}
+	for k, v := range extras {
+		envelope[k] = v
+	}
+	return json.Marshal(envelope)
+}
+
+func extractScoreline(data json.RawMessage) (map[string]any, bool) {
+	var root map[string]any
+	if err := json.Unmarshal(data, &root); err != nil {
+		return nil, false
+	}
+	gameInfo, ok := findGameInfo(root)
+	if !ok {
+		return nil, false
+	}
+	comps, ok := gameInfo["competitions"].([]any)
+	if !ok || len(comps) == 0 {
+		return nil, false
+	}
+	comp, ok := comps[0].(map[string]any)
+	if !ok {
+		return nil, false
+	}
+	competitors, ok := comp["competitors"].([]any)
+	if !ok || len(competitors) == 0 {
+		return nil, false
+	}
+
+	var away, home map[string]any
+	for _, item := range competitors {
+		c, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		side, _ := c["homeAway"].(string)
+		if side == "away" {
+			away = c
+		} else if side == "home" {
+			home = c
+		}
+	}
+	if away == nil || home == nil {
+		return nil, false
+	}
+
+	scoreline := map[string]any{
+		"display": fmt.Sprintf("%v %v - %v %v", awayTeamName(away), scoreText(away), homeTeamName(home), scoreText(home)),
+		"away": map[string]any{
+			"team":         awayTeamName(away),
+			"abbreviation": awayTeamAbbr(away),
+			"score":        scoreText(away),
+		},
+		"home": map[string]any{
+			"team":         homeTeamName(home),
+			"abbreviation": homeTeamAbbr(home),
+			"score":        scoreText(home),
+		},
+	}
+	return scoreline, true
+}
+
+func extractScorelineFromScoreboard(data json.RawMessage, eventID string) (map[string]any, bool) {
+	var root map[string]any
+	if err := json.Unmarshal(data, &root); err != nil {
+		return nil, false
+	}
+	event, ok := findEventByID(root, eventID)
+	if !ok {
+		return nil, false
+	}
+	comps, ok := event["competitions"].([]any)
+	if !ok || len(comps) == 0 {
+		return nil, false
+	}
+	comp, ok := comps[0].(map[string]any)
+	if !ok {
+		return nil, false
+	}
+	competitors, ok := comp["competitors"].([]any)
+	if !ok || len(competitors) == 0 {
+		return nil, false
+	}
+
+	var away, home map[string]any
+	for _, item := range competitors {
+		c, ok := item.(map[string]any)
+		if !ok {
+			continue
+		}
+		side, _ := c["homeAway"].(string)
+		if side == "away" {
+			away = c
+		} else if side == "home" {
+			home = c
+		}
+	}
+	if away == nil || home == nil {
+		return nil, false
+	}
+
+	scoreline := map[string]any{
+		"display": fmt.Sprintf("%v %v - %v %v", awayTeamName(away), scoreText(away), homeTeamName(home), scoreText(home)),
+		"away": map[string]any{
+			"team":         awayTeamName(away),
+			"abbreviation": awayTeamAbbr(away),
+			"score":        scoreText(away),
+		},
+		"home": map[string]any{
+			"team":         homeTeamName(home),
+			"abbreviation": homeTeamAbbr(home),
+			"score":        scoreText(home),
+		},
+	}
+	return scoreline, true
+}
+
+func findEventByID(node any, eventID string) (map[string]any, bool) {
+	switch v := node.(type) {
+	case map[string]any:
+		if id, ok := v["id"].(string); ok && id == eventID {
+			if _, hasCompetitions := v["competitions"]; hasCompetitions {
+				return v, true
+			}
+		}
+		for _, child := range v {
+			if event, ok := findEventByID(child, eventID); ok {
+				return event, true
+			}
+		}
+	case []any:
+		for _, child := range v {
+			if event, ok := findEventByID(child, eventID); ok {
+				return event, true
+			}
+		}
+	}
+	return nil, false
+}
+
+func findGameInfo(node any) (map[string]any, bool) {
+	switch v := node.(type) {
+	case map[string]any:
+		if gameInfo, ok := v["gameInfo"].(map[string]any); ok {
+			return gameInfo, true
+		}
+		for _, child := range v {
+			if gameInfo, ok := findGameInfo(child); ok {
+				return gameInfo, true
+			}
+		}
+	case []any:
+		for _, child := range v {
+			if gameInfo, ok := findGameInfo(child); ok {
+				return gameInfo, true
+			}
+		}
+	}
+	return nil, false
+}
+
+func scoreText(team map[string]any) string {
+	if v, ok := team["score"].(string); ok && v != "" {
+		return v
+	}
+	return "0"
+}
+
+func teamInfo(team map[string]any) map[string]any {
+	if raw, ok := team["team"].(map[string]any); ok {
+		return raw
+	}
+	return team
+}
+
+func awayTeamName(team map[string]any) string {
+	return teamString(teamInfo(team), "displayName")
+}
+
+func homeTeamName(team map[string]any) string {
+	return teamString(teamInfo(team), "displayName")
+}
+
+func awayTeamAbbr(team map[string]any) string {
+	return teamString(teamInfo(team), "abbreviation")
+}
+
+func homeTeamAbbr(team map[string]any) string {
+	return teamString(teamInfo(team), "abbreviation")
+}
+
+func teamString(team map[string]any, key string) string {
+	if v, ok := team[key].(string); ok && v != "" {
+		return v
+	}
+	return "Unknown"
+}
+
 // defaultDBPath returns the canonical path for the local SQLite database.
 func defaultDBPath(name string) string {
 	home, _ := os.UserHomeDir()

@@ -37,6 +37,20 @@ func newSiteGetNflSummaryCmd(flags *rootFlags) *cobra.Command {
 			if err != nil {
 				return classifyAPIError(err, flags)
 			}
+			scoreline := map[string]any(nil)
+			if flagEvent != "" {
+				scoreClient := *c
+				scoreClient.NoCache = true
+				if scoreboard, scoreErr := scoreClient.Get("/apis/site/v2/sports/football/nfl/scoreboard", nil); scoreErr == nil {
+					scoreline, _ = extractScorelineFromScoreboard(scoreboard, flagEvent)
+				}
+			}
+			if scoreline == nil {
+				scoreline, _ = extractScoreline(data)
+			}
+			if scoreline != nil && isTerminal(cmd.OutOrStdout()) {
+				fmt.Fprintln(cmd.ErrOrStderr(), scoreline["display"])
+			}
 			// Print provenance to stderr for human-facing output
 			{
 				var countItems []json.RawMessage
@@ -53,7 +67,7 @@ func newSiteGetNflSummaryCmd(flags *rootFlags) *cobra.Command {
 				} else if flags.compact {
 					filtered = compactFields(filtered)
 				}
-				wrapped, wrapErr := wrapWithProvenance(filtered, prov)
+				wrapped, wrapErr := wrapWithProvenanceAndExtras(filtered, prov, map[string]any{"scoreline": scoreline})
 				if wrapErr != nil {
 					return wrapErr
 				}
