@@ -1,7 +1,7 @@
 ---
 name: pp-espn-sports
 description: "Printing Press CLI for Espn Sports. Multi-sport CLI spec for live scores and game summaries from ESPN."
-author: "Landon Lockhart"
+author: "landonlockhart15-rgb"
 license: "Apache-2.0"
 argument-hint: "<command> [args] | install cli|mcp"
 allowed-tools: "Read Bash"

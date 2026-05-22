@@ -42,9 +42,9 @@ checksum:
 brews:
   - name: espn-sports-pp-cli
     repository:
-      owner: landon-lockhart
+      owner: landonlockhart15-rgb
       name: homebrew-tap
-    homepage: "https://github.com/landon-lockhart/espn-sports-pp-cli"
+    homepage: "https://github.com/landonlockhart15-rgb/espn-sports-pp-cli"
     description: "Multi-sport CLI spec for live scores and game summaries from ESPN."
     install: |
       bin.install "espn-sports-pp-cli"
