@@ -54,6 +54,18 @@ paths:
             application/json:
               schema:
                 type: object
+  /apis/site/v2/sports/baseball/mlb/scoreboard:
+    get:
+      operationId: getMlbScoreboard
+      summary: Get MLB scoreboard
+      description: Return the current MLB scoreboard payload from ESPN.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
   /apis/site/v2/sports/basketball/nba/summary:
     get:
       operationId: getNbaSummary
@@ -123,6 +135,25 @@ paths:
           schema:
             type: string
           description: ESPN event id from the NCAA basketball scoreboard payload.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+  /apis/site/v2/sports/baseball/mlb/summary:
+    get:
+      operationId: getMlbSummary
+      summary: Get MLB game summary
+      description: Return an MLB game's summary and box score from ESPN.
+      parameters:
+        - name: event
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ESPN event id from the MLB scoreboard payload.
       responses:
         "200":
           description: Successful response

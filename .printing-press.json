@@ -9,10 +9,10 @@
   "printer_name": "landonlockhart15-rgb",
   "spec_path": "espn-sports.yaml",
   "spec_format": "openapi3",
-  "spec_checksum": "sha256:93d6535a2fa099b598fbe4bcba2285d181af0ebca947984f945689f1c89dc927",
+  "spec_checksum": "sha256:2d3dab199362ca0740452729e3120a482f89a9968283b7f2f21e96886c52f7a6",
   "mcp_binary": "espn-sports-pp-mcp",
-  "mcp_tool_count": 8,
-  "mcp_public_tool_count": 8,
+  "mcp_tool_count": 10,
+  "mcp_public_tool_count": 10,
   "mcp_ready": "full",
   "api_version": "1.0.0",
   "auth_type": "none"

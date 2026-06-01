@@ -35,6 +35,8 @@ var whichIndex = []whichEntry{
 	{Command: "site get-ncaaf-summary", Description: "Return an NCAA football game's summary and box score from ESPN.", Group: "site"},
 	{Command: "site get-nfl-scoreboard", Description: "Return the current NFL scoreboard payload from ESPN.", Group: "site"},
 	{Command: "site get-nfl-summary", Description: "Return an NFL game's summary and box score from ESPN.", Group: "site"},
+	{Command: "site get-mlb-scoreboard", Description: "Return the current MLB scoreboard payload from ESPN.", Group: "site"},
+	{Command: "site get-mlb-summary", Description: "Return an MLB game's summary and box score from ESPN.", Group: "site"},
 }
 
 // whichMatch pairs an index entry with its ranking score for a query.

@@ -21,5 +21,7 @@ func newSiteCmd(flags *rootFlags) *cobra.Command {
 	cmd.AddCommand(newSiteGetNcaafSummaryCmd(flags))
 	cmd.AddCommand(newSiteGetNflScoreboardCmd(flags))
 	cmd.AddCommand(newSiteGetNflSummaryCmd(flags))
+	cmd.AddCommand(newSiteGetMlbScoreboardCmd(flags))
+	cmd.AddCommand(newSiteGetMlbSummaryCmd(flags))
 	return cmd
 }

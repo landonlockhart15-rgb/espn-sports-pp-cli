@@ -105,6 +105,8 @@ espn-sports-pp-cli --help
 - **`espn-sports-pp-cli site get-ncaaf-summary`** - Return an NCAA football game's summary and box score from ESPN.
 - **`espn-sports-pp-cli site get-nfl-scoreboard`** - Return the current NFL scoreboard payload from ESPN.
 - **`espn-sports-pp-cli site get-nfl-summary`** - Return an NFL game's summary and box score from ESPN.
+- **`espn-sports-pp-cli site get-mlb-scoreboard`** - Return the current MLB scoreboard payload from ESPN.
+- **`espn-sports-pp-cli site get-mlb-summary`** - Return an MLB game's summary and box score from ESPN.
 
 ## Output formats
 

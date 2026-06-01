@@ -12,13 +12,13 @@ import (
 	"strings"
 	"time"
 
-	mcplib "github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
 	"espn-sports-pp-cli/internal/cli"
 	"espn-sports-pp-cli/internal/client"
 	"espn-sports-pp-cli/internal/config"
 	"espn-sports-pp-cli/internal/mcp/cobratree"
 	"espn-sports-pp-cli/internal/store"
+	mcplib "github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 )
 
 // RegisterTools registers all API operations as MCP tools.
@@ -30,7 +30,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/nba/scoreboard", []mcpParamBinding{ }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/nba/scoreboard", []mcpParamBinding{}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-nba-summary",
@@ -40,7 +40,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/nba/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}, }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/nba/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-ncaab-scoreboard",
@@ -49,7 +49,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard", []mcpParamBinding{ }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard", []mcpParamBinding{}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-ncaab-summary",
@@ -59,7 +59,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/mens-college-basketball/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}, }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/basketball/mens-college-basketball/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-ncaaf-scoreboard",
@@ -68,7 +68,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/football/college-football/scoreboard", []mcpParamBinding{ }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/football/college-football/scoreboard", []mcpParamBinding{}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-ncaaf-summary",
@@ -78,7 +78,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/football/college-football/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}, }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/football/college-football/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-nfl-scoreboard",
@@ -87,7 +87,7 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/football/nfl/scoreboard", []mcpParamBinding{ }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/football/nfl/scoreboard", []mcpParamBinding{}, []string{}),
 	)
 	s.AddTool(
 		mcplib.NewTool("site_get-nfl-summary",
@@ -97,7 +97,26 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/apis/site/v2/sports/football/nfl/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}, }, []string{ }),
+		makeAPIHandler("GET", "/apis/site/v2/sports/football/nfl/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}}, []string{}),
+	)
+	s.AddTool(
+		mcplib.NewTool("site_get-mlb-scoreboard",
+			mcplib.WithDescription("Return the current MLB scoreboard payload from ESPN. Returns the SiteGetMlbScoreboardResponse."),
+			mcplib.WithReadOnlyHintAnnotation(true),
+			mcplib.WithDestructiveHintAnnotation(false),
+			mcplib.WithOpenWorldHintAnnotation(true),
+		),
+		makeAPIHandler("GET", "/apis/site/v2/sports/baseball/mlb/scoreboard", []mcpParamBinding{}, []string{}),
+	)
+	s.AddTool(
+		mcplib.NewTool("site_get-mlb-summary",
+			mcplib.WithDescription("Return an MLB game's summary and box score from ESPN. Required: event. Returns the SiteGetMlbSummaryResponse."),
+			mcplib.WithString("event", mcplib.Required(), mcplib.Description("ESPN event id from the MLB scoreboard payload.")),
+			mcplib.WithReadOnlyHintAnnotation(true),
+			mcplib.WithDestructiveHintAnnotation(false),
+			mcplib.WithOpenWorldHintAnnotation(true),
+		),
+		makeAPIHandler("GET", "/apis/site/v2/sports/baseball/mlb/summary", []mcpParamBinding{{PublicName: "event", WireName: "event", Location: "query"}}, []string{}),
 	)
 	// SQL tool — ad-hoc analysis on synced data without API calls
 	s.AddTool(
@@ -277,6 +296,7 @@ func dbPath() string {
 	home, _ := os.UserHomeDir()
 	return filepath.Join(home, ".local", "share", "espn-sports-pp-cli", "data.db")
 }
+
 // Note: MCP tools use their own dbPath() because they are in a separate package (main, not cli).
 // The CLI's defaultDBPath() in the cli package uses the same canonical path.
 
@@ -382,16 +402,16 @@ func handleContext(_ context.Context, _ mcplib.CallToolRequest) (*mcplib.CallToo
 		"api":         "espn-sports",
 		"description": "Multi-sport CLI spec for live scores and game summaries from ESPN.",
 		"archetype":   "generic",
-		"tool_count":  8,
+		"tool_count":  10,
 		// tool_surface tells agents which surface a capability lives on.
 		"tool_surface": "MCP exposes typed endpoint tools plus a runtime mirror of user-facing CLI commands. Endpoint tools keep typed schemas; command-mirror tools shell out to the companion espn-sports-pp-cli binary.",
 		"resources": []map[string]any{
 			{
-				"name": "site",
+				"name":        "site",
 				"description": "Manage site",
-				"endpoints": []string{"get-nba-scoreboard", "get-nba-summary", "get-ncaab-scoreboard", "get-ncaab-summary", "get-ncaaf-scoreboard", "get-ncaaf-summary", "get-nfl-scoreboard", "get-nfl-summary",  },
-				"syncable": true,
-				"searchable": true,
+				"endpoints":   []string{"get-nba-scoreboard", "get-nba-summary", "get-ncaab-scoreboard", "get-ncaab-summary", "get-ncaaf-scoreboard", "get-ncaaf-summary", "get-nfl-scoreboard", "get-nfl-summary", "get-mlb-scoreboard", "get-mlb-summary"},
+				"syncable":    true,
+				"searchable":  true,
 			},
 		},
 		"query_tips": []string{

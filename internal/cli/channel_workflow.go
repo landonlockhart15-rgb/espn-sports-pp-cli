@@ -55,10 +55,16 @@ and full resync. After archiving, use 'search' for instant full-text search.`,
 			}
 			defer s.Close()
 
-			resources := []string{"site", "site-v2-sports-basketball-mens-college-basketball-scoreboard", "site-v2-sports-basketball-nba-scoreboard", "site-v2-sports-football-college-football-scoreboard",  }
+			resources := []string{"site", "site-v2-sports-baseball-mlb-scoreboard", "site-v2-sports-basketball-mens-college-basketball-scoreboard", "site-v2-sports-basketball-nba-scoreboard", "site-v2-sports-football-college-football-scoreboard"}
 			totalSynced := 0
 
 			for _, resource := range resources {
+				path, pathErr := syncResourcePath(resource)
+				if pathErr != nil {
+					fmt.Fprintf(cmd.ErrOrStderr(), "  warning: %s: %v\n", resource, pathErr)
+					continue
+				}
+
 				cursor := ""
 				if !full {
 					existing, _, _, err := s.GetSyncState(resource)
@@ -76,7 +82,7 @@ and full resync. After archiving, use 'search' for instant full-text search.`,
 
 				count := 0
 				for {
-					data, fetchErr := c.Get("/"+resource, params)
+					data, fetchErr := c.Get(path, params)
 					if fetchErr != nil {
 						fmt.Fprintf(cmd.ErrOrStderr(), "  warning: %s: %v\n", resource, fetchErr)
 						break
@@ -94,7 +100,9 @@ and full resync. After archiving, use 'search' for instant full-text search.`,
 						break
 					}
 					for _, item := range items {
-						var obj struct{ ID string `json:"id"` }
+						var obj struct {
+							ID string `json:"id"`
+						}
 						json.Unmarshal(item, &obj)
 						id := obj.ID
 						if id == "" {
