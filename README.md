@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="lockhartlabs-logo.png" alt="LockhartLabs logo" width="120" />
+</p>
+
+<p align="center"><strong>Made by LockhartLabs</strong></p>
+
 # ESPN Sports CLI
 
 **Status:** Generated/maintained CLI spec for agent use  
